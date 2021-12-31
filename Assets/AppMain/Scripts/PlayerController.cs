@@ -4,14 +4,33 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    /// <summary>
+    /// ステータス.
+    /// </summary>
+    [System.Serializable]
+    public class Status
+    {
+        // 体力.
+        public int Hp = 10;
+        // 攻撃力.
+        public int Power = 1;
+    }
+
+    // 基本ステータス.
+    [SerializeField] Status DefaultStatus = new Status();
+    // 現在のステータス.
+    public Status CurrentStatus = new Status();
+
     [SerializeField] private GameObject attackHit;
     [SerializeField] private Animator animator;
     [SerializeField] float jumpPower = 20f;
     [SerializeField] private Rigidbody rigid;
+    // 攻撃HitオブジェクトのColliderCall.
+    [SerializeField] private ColliderCallReceiver attackHitCall;
     [SerializeField] private ColliderCallReceiver footColliderCall;
     [SerializeField] private GameObject touchMarker;
     // カメラコントローラー.
-    [SerializeField] private PlayerCameraController cameraController = null;
+    [SerializeField] private PlayerCameraController cameraController;
 
     // 左半分タッチスタート位置.
     Vector2 leftStartTouch = new Vector2();
@@ -31,11 +50,20 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetBool("isGround", true);
         attackHit.SetActive(false);
+        // 攻撃判定用コライダーイベント登録.
+        attackHitCall.TriggerEnterEvent.AddListener(OnAttackHitTriggerEnter);
+
+        // FootSphereのイベント登録.
+        footColliderCall.TriggerStayEvent.AddListener(OnFootTriggerStay);
+        footColliderCall.TriggerExitEvent.AddListener(OnFootTriggerExit);
+
+        // 現在のステータスの初期化.
+        CurrentStatus.Hp = DefaultStatus.Hp;
+        CurrentStatus.Power = DefaultStatus.Power;
     }
 
     void Update()
     {
-
         if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
         {
             // スマホタッチ操作.
@@ -62,7 +90,7 @@ public class PlayerController : MonoBehaviour
                     }
 
                     // 左タッチ.
-                    if (isLeftTouch == true)
+                    if (isLeftTouch)
                     {
                         // タッチ開始.
                         if (touch.phase == TouchPhase.Began)
@@ -96,7 +124,7 @@ public class PlayerController : MonoBehaviour
                         }
                     }
 
-                    if (isRightTouch == true)
+                    if (isRightTouch)
                     {
                         cameraController.UpdateRightTouch(touch);
                     }
@@ -116,7 +144,7 @@ public class PlayerController : MonoBehaviour
 
         // プレイヤーの向きを調整.
         bool isKeyInput = (horizontalKeyInput != 0 || verticalKeyInput != 0 || leftTouchInput != Vector2.zero);
-        if (isKeyInput == true && isAttack == false)
+        if (isKeyInput && !isAttack)
         {
             bool currentIsRun = animator.GetBool("isRun");
             if (currentIsRun == false) animator.SetBool("isRun", true);
@@ -127,7 +155,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             bool currentIsRun = animator.GetBool("isRun");
-            if (currentIsRun == true) animator.SetBool("isRun", false);
+            if (currentIsRun) animator.SetBool("isRun", false);
         }
     }
 
@@ -143,7 +171,7 @@ public class PlayerController : MonoBehaviour
     {
 
 
-        if (isAttack == false)
+        if (!isAttack)
         {
             Vector3 input = new Vector3();
             Vector3 move = new Vector3();
@@ -173,12 +201,26 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void OnAttackButtonClicked()
     {
-        if (isAttack == false)
+        if (!isAttack)
         {
             // AnimationのisAttackトリガーを起動.
             animator.SetTrigger("isAttack");
             // 攻撃開始.
             isAttack = true;
+        }
+    }
+
+    /// <summary>
+    /// 攻撃判定トリガーエンターイベントコール.
+    /// </summary>
+    /// <param name="col"> 侵入したコライダー. </param>
+    void OnAttackHitTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Enemy")
+        {
+            var enemy = col.gameObject.GetComponent<EnemyBase>();
+            enemy?.OnAttackHit(CurrentStatus.Power);
+            attackHit.SetActive(false);
         }
     }
 
@@ -197,7 +239,7 @@ public class PlayerController : MonoBehaviour
     /// FootSphereトリガーステイコール.
     /// </summary>
     /// <param name="col"> 侵入したコライダー. </param>
-    void OnCollisionStay(Collision col)
+    void OnFootTriggerStay(Collider col)
     {
         if (col.gameObject.tag == "Ground")
         {
@@ -210,12 +252,31 @@ public class PlayerController : MonoBehaviour
     /// FootSphereトリガーイグジットコール.
     /// </summary>
     /// <param name="col"> 侵入したコライダー. </param>
-    void OnCollisionExit(Collision col)
+    void OnFootTriggerExit(Collider col)
     {
         if (col.gameObject.tag == "Ground")
         {
             isGround = false;
             animator.SetBool("isGround", false);
+        }
+    }
+
+    /// <summary>
+    /// 敵の攻撃がヒットしたときの処理.
+    /// </summary>
+    /// <param name="damage"> 食らったダメージ. </param>
+    public void OnEnemyAttackHit(int damage)
+    {
+        Debug.Log("hoge");
+        CurrentStatus.Hp -= damage;
+
+        if (CurrentStatus.Hp <= 0)
+        {
+            OnDie();
+        }
+        else
+        {
+            Debug.Log(damage + "のダメージを食らった!!残りHP" + CurrentStatus.Hp);
         }
     }
 
@@ -239,5 +300,13 @@ public class PlayerController : MonoBehaviour
         attackHit.SetActive(false);
         // 攻撃終了.
         isAttack = false;
+    }
+
+    /// <summary>
+    /// 死亡時処理.
+    /// </summary>
+    void OnDie()
+    {
+        Debug.Log("死亡しました。");
     }
 }

@@ -10,12 +10,23 @@ public class ColliderCallReceiver : MonoBehaviour
 {
     // トリガーイベント定義クラス.
     public class TriggerEvent : UnityEvent<Collider> { }
+
+    // トリガーイベント定義クラス.
+    public class CollisionEvent : UnityEvent<Collision> { }
+
     // トリガーエンターイベント.
     public TriggerEvent TriggerEnterEvent = new TriggerEvent();
     // トリガーステイイベント.
     public TriggerEvent TriggerStayEvent = new TriggerEvent();
     // トリガーイグジットイベント.
     public TriggerEvent TriggerExitEvent = new TriggerEvent();
+
+    public CollisionEvent CollisionEnterEvent = new CollisionEvent();
+
+    public CollisionEvent CollisionStayEvent = new CollisionEvent();
+
+    public CollisionEvent CollisionExitEvent = new CollisionEvent();
+
 
     void Start()
     {

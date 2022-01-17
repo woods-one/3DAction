@@ -23,10 +23,21 @@ public class GameController : MonoBehaviour
     // フィールド上にいる敵リスト.
     List<EnemyBase> fieldEnemys = new List<EnemyBase>();
 
+    // 回復アイテムプレハブリスト
+    [SerializeField] List<GameObject> itemPrefabList = new List<GameObject>();
+    // 回復アイテム出現地点リスト.
+    [SerializeField] List<Transform> itemGateList = new List<Transform>();
+
     //! 敵自動生成フラグ.
     bool isEnemySpawn = false;
+    //　アイテム自動生成 フラグ
+    bool isItemSpawn = false;
     //! 現在の敵撃破数.
     int currentBossCount = 0;
+    //
+    int currentItemCount = 0;
+
+    int itemGateCount;
 
     //! ボスプレハブ.
     [SerializeField] GameObject bossPrefab;
@@ -53,6 +64,7 @@ public class GameController : MonoBehaviour
         gameOver.SetActive(false);
 
         Init();
+        
     }
 
     void Update()
@@ -63,7 +75,6 @@ public class GameController : MonoBehaviour
             if (currentTime > 999f) timerText.text = "999.9";
             else timerText.text = "Time : " + currentTime.ToString("000.0");
         }
-        Debug.Log(currentBossCount);
     }
 
     /// <summary> 
@@ -74,6 +85,11 @@ public class GameController : MonoBehaviour
         // 敵の生成開始.
         isEnemySpawn = true;
         StartCoroutine(EnemyCreateLoop());
+
+        isItemSpawn = true; 
+        StartCoroutine(ItemCreateLoop());
+
+        itemGateCount = itemGateList.Count - 1;
 
         currentBossCount = 0;
         isBossAppeared = false;
@@ -124,6 +140,18 @@ public class GameController : MonoBehaviour
         isBossAppeared = true;
     }
 
+    void CreateItem(int posNum)
+    {
+        Debug.Log($"hoge:{posNum}");
+        var num = Random.Range(0, itemPrefabList.Count);
+        var prefab = itemPrefabList[num];
+
+        var pos = itemGateList[posNum];
+        
+
+        Instantiate(prefab, pos.position, Quaternion.identity);
+    }
+     
     /// <summary>
     /// 敵に次の目的地を設定.
     /// </summary>
@@ -192,6 +220,18 @@ public class GameController : MonoBehaviour
             if (currentBossCount > 10) isEnemySpawn = false;
 
             if (isEnemySpawn == false) break;
+        }
+    }
+
+    IEnumerator ItemCreateLoop()
+    {
+        while (isItemSpawn)
+        {
+            yield return null;
+            currentItemCount++;
+            CreateItem(itemGateCount);
+            itemGateCount--;
+            isItemSpawn = (itemGateCount >= 0);
         }
     }
 

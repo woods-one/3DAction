@@ -47,6 +47,8 @@ public class PlayerController : MonoBehaviour
     //! HPバーのスライダー.
     [SerializeField] Slider hpBar;
 
+    public bool isPowerUpTime = false;
+
     //! ゲームオーバー時イベント.
     public UnityEvent GameOverEvent = new UnityEvent();
     // 開始時位置.
@@ -64,6 +66,8 @@ public class PlayerController : MonoBehaviour
     bool isAttack = false;
     // 接地フラグ.
     bool isGround = false;
+
+    bool isOnkey = false;
 
     // PCキー横方向入力.
     private float horizontalKeyInput = 0;
@@ -104,6 +108,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKey("space") && !isOnkey)
+        {
+            isOnkey = true;
+            OnJumpButtonClicked();
+        }
+
+        if(Input.GetMouseButtonDown(0) && !isOnkey)
+        {
+            isOnkey = true;
+            OnAttackButtonClicked();
+        }
         if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
         {
             // スマホタッチ操作.
@@ -246,6 +261,26 @@ public class PlayerController : MonoBehaviour
         hpBar.value = CurrentStatus.Hp;
     }
 
+    public void PowerUpCoroutineStart(int value)
+    {
+        StartCoroutine(OnPowerUp(value));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="powerUpPoint">  </param>
+    public IEnumerator OnPowerUp(int powerUpPoint)
+    {
+        isPowerUpTime = true;
+        CurrentStatus.Power += powerUpPoint;
+
+        yield return new WaitForSeconds(5f);
+
+        CurrentStatus.Power = DefaultStatus.Power;
+        isPowerUpTime = false;
+    }
+
     /// <summary>
     /// 攻撃ボタンクリックコールバック.
     /// </summary>
@@ -258,6 +293,7 @@ public class PlayerController : MonoBehaviour
             // 攻撃開始.
             isAttack = true;
         }
+        StartCoroutine(WaitNextPressBottun());
     }
 
 
@@ -270,6 +306,7 @@ public class PlayerController : MonoBehaviour
         {
             rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         }
+        StartCoroutine(WaitNextPressBottun());
     }
 
     /// <summary>
@@ -400,5 +437,11 @@ public class PlayerController : MonoBehaviour
         yield return new WaitUntil(() => particle.isPlaying == false);
         if (particleObjectList.Contains(particle.gameObject) == true) particleObjectList.Remove(particle.gameObject);
         Destroy(particle.gameObject);
+    }
+
+    IEnumerator WaitNextPressBottun()
+    {
+        yield return new WaitForSeconds(1f);
+        isOnkey = false;
     }
 }

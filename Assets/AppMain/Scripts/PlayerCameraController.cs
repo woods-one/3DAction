@@ -19,20 +19,18 @@ public class PlayerCameraController : MonoBehaviour
     // カメラ移動制限MinMax.
     [SerializeField] private Vector2 heightLimit_MinMax = new Vector2(-1f, 3f);
 
+    [SerializeField] private GameObject mainCame;              //メインカメラ格納用
+    [SerializeField] private GameObject playerObject;            //回転の中心となるプレイヤー格納用
+    [SerializeField] private float rotateSpeed;
+
     // タッチスタート位置.
     Vector2 cameraStartTouch = Vector2.zero;
     // 現在のタッチ位置.
     Vector2 cameraTouchInput = Vector2.zero;
 
-
-    void Start()
-    {
-
-    }
-
     void Update()
     {
-
+        //rotateCamera();
     }
 
     public void UpdateRightTouch(Touch touch)
@@ -118,5 +116,15 @@ public class PlayerCameraController : MonoBehaviour
         cameraMarker.y += lookHeight;
         var _camLook = (cameraMarker - mainCamera.transform.position).normalized;
         mainCamera.transform.forward = _camLook;
+    }
+    //カメラを回転させる関数
+    private void rotateCamera()
+    {
+        //Vector3でX,Y方向の回転の度合いを定義
+        Vector3 angle = new Vector3(Input.GetAxis("Mouse X") * rotateSpeed, Input.GetAxis("Mouse Y") * rotateSpeed, 0);
+
+        //transform.RotateAround()をしてメインカメラを回転させる
+        mainCame.transform.RotateAround(playerObject.transform.position, Vector3.up, angle.x);
+        mainCame.transform.RotateAround(playerObject.transform.position, transform.right, angle.y);
     }
 }

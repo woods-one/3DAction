@@ -305,7 +305,6 @@ public class PlayerController : MonoBehaviour
         if (isGround == true)
         {
             rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-            StartCoroutine(StopEternarJunp());
         }
         StartCoroutine(WaitNextPressBottun());
     }
@@ -444,11 +443,5 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         isOnkey = false;
-    }
-
-    IEnumerator StopEternarJunp()
-    {
-        yield return new WaitForSeconds(5f);
-        if (!isGround) isGround = true;
     }
 }

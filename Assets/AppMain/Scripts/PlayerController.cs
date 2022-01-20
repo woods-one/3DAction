@@ -81,6 +81,8 @@ public class PlayerController : MonoBehaviour
     // 左半分タッチ入力.
     Vector2 leftTouchInput = new Vector2();
 
+    const int atackTimeDecreaseHP = 5;
+
 
     void Start()
     {
@@ -355,7 +357,15 @@ public class PlayerController : MonoBehaviour
     /// <param name="damage"> 食らったダメージ. </param>
     public void OnEnemyAttackHit(int damage, Vector3 attackPosition)
     {
-        CurrentStatus.Hp -= damage;
+        if(isAttack)
+        {
+            CurrentStatus.Hp -= damage * atackTimeDecreaseHP;
+        }
+        else
+        {
+            CurrentStatus.Hp -= damage;
+        }
+        
         hpBar.value = CurrentStatus.Hp;
 
         var pos = myCollider.ClosestPoint(attackPosition);

@@ -30,7 +30,7 @@ public class PlayerCameraController : MonoBehaviour
 
     void Update()
     {
-        //rotateCamera();
+        rotateCamera();
     }
 
     public void UpdateRightTouch(Touch touch)

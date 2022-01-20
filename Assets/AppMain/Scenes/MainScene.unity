@@ -266,8 +266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultStatus:
-    Hp: 20
-    Power: 1
+    Hp: 30
+    Power: 2
   CurrentStatus:
     Hp: 10
     Power: 1
@@ -1189,6 +1189,9 @@ MonoBehaviour:
   rotationSpeed: 0.01
   heightSpeed: 0.001
   heightLimit_MinMax: {x: -1, y: 3}
+  mainCame: {fileID: 432199333}
+  playerObject: {fileID: 168936287}
+  rotateSpeed: 5
 --- !u!1 &449517423
 GameObject:
   m_ObjectHideFlags: 0
@@ -6509,7 +6512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &698717463
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7867,23 +7870,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 844783932231459292, guid: bb15f2a33feb742e0ab3b3519688e89d, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 844783932231459292, guid: bb15f2a33feb742e0ab3b3519688e89d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 844783932231459292, guid: bb15f2a33feb742e0ab3b3519688e89d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 844783932231459292, guid: bb15f2a33feb742e0ab3b3519688e89d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 844783932231459292, guid: bb15f2a33feb742e0ab3b3519688e89d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -877
+      value: -1150
       objectReference: {fileID: 0}
     - target: {fileID: 844783932231459292, guid: bb15f2a33feb742e0ab3b3519688e89d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 681
+      value: 700
       objectReference: {fileID: 0}
     - target: {fileID: 844783932231459292, guid: bb15f2a33feb742e0ab3b3519688e89d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7989,7 +7996,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1452976219
 RectTransform:
   m_ObjectHideFlags: 0

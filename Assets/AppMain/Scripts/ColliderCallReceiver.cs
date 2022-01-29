@@ -26,12 +26,7 @@ public class ColliderCallReceiver : MonoBehaviour
     public CollisionEvent CollisionStayEvent = new CollisionEvent();
 
     public CollisionEvent CollisionExitEvent = new CollisionEvent();
-
-
-    void Start()
-    {
-
-    }
+    
 
     /// <summary>
     /// トリガーエンターコールバック.

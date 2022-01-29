@@ -504,11 +504,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4882590064214274, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
   m_PrefabInstance: {fileID: 6763058739075090390}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &6667672185264236682 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 95528395651247964, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
-  m_PrefabInstance: {fileID: 6763058739075090390}
-  m_PrefabAsset: {fileID: 0}
 --- !u!54 &1382000862
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -573,20 +568,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14c1fad80727e4727a7e01399ab85abb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myCollider: {fileID: 1382000863}
-  hitParticlePrefab: {fileID: 7805868855872379554, guid: a2c8dd74c8fc540a9a3cdc36b1aade78, type: 3}
-  aroundColliderCall: {fileID: 498939794}
-  attackHitColliderCall: {fileID: 5004306899184213681}
-  animator: {fileID: 6667672185264236682}
-  attackInterval: 2
-  hpBar: {fileID: 844783932783206609}
   DefaultStatus:
     Hp: 10
     Power: 1
   CurrentStatus:
     Hp: 10
     Power: 1
-  IsBattle: 0
   IsBoss: 0
+  aroundColliderCall: {fileID: 498939794}
+  myCollider: {fileID: 1382000863}
+  hitParticlePrefab: {fileID: 7805868855872379554, guid: a2c8dd74c8fc540a9a3cdc36b1aade78, type: 3}
+  attackInterval: 2
+  IsBattle: 0
+  attackHitColliderCall: {fileID: 5004306899184213681}
+  hpBar: {fileID: 844783932783206609}
   farAttackCall: {fileID: 1408907474}
   farAttackRigid: {fileID: 8246123859013778288}
